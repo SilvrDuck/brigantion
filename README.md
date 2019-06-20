@@ -1,2 +1,2 @@
 # brigantion
-Simple client server communicatino for a LARP
+Simple client/server system for a LARP
