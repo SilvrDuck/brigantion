@@ -1,0 +1,16 @@
+version: '3'
+
+#volumes:
+#  mongo:
+
+services:
+
+  mongo:
+    image: mongo:3-jessie
+    ports:
+      - 27017:27017
+#    volumes:
+#      - mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
