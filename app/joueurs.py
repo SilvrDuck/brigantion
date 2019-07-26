@@ -5,7 +5,8 @@ from app.cmd import txt2cmd
 from app.executor import exec_cmd
 from app.sender import send_error
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
 
     while True:
         try:
