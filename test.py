@@ -1,26 +1,19 @@
+from asciimatics.effects import Cycle, Stars
+from asciimatics.renderers import FigletText
+from asciimatics.scene import Scene
+from asciimatics.screen import Screen
+from asciimatics.renderers import BarChart, SpeechBubble, Rainbow, Fire
+
+print(FigletText("ROCKS!", font='big'))
+
+
+f = lambda: 2
+f1 = lambda: 12
+
+print(Fire(10, 10, 'raustienrastui enrstuaie rstuaien', 0.5, 2, 3, bg=False))
+
 import time
-import threading
+from tqdm import tqdm
 
-
-def send(text):
-    pass
-
-def prt(text):
-    send(text)
-    print(text)
-
-
-def server():
-    while True:
-        time.sleep(10)
-        prt('from server')
-
-def client():
-    while True:
-        imp = input('>')
-        send(imp)
-
-tr = threading.Thread(target=server)
-tr.start()
-
-client()
+for i in tqdm(range(12)):
+    time.sleep(0.1)

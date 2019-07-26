@@ -1,0 +1,4 @@
+tqdm
+asciimatics
+print(SpeechBubble('lol', uni=True))
+print(FigletText("ROCKS!", font='big'))

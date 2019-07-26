@@ -1,5 +1,7 @@
+from flask import Flask
+app = Flask(__name__)
 
-
-def run():
-    while True:
-        pass
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+    
