@@ -1,4 +1,9 @@
 from pathlib import Path
 
-data.data_path = Path("app/data")
+documents_path = Path("app/data/documents")
+emails_path = Path("app/data/emails")
+sismo_path = Path("app/data/sismographe")
 
+gn_year = 1963
+gn_month = 11
+gn_day = 22

@@ -1,5 +1,5 @@
 __TITLE__ Ceci est un test
-__PASS__ auieauie
+__PWD__ auieauie
 __HIDDEN__
 
 Un super doc avec un code secret, youhou. Let’s make it longer. 
