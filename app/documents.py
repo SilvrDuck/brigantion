@@ -96,7 +96,7 @@ def create_email(email, file):
             source = content
         elif tag == 'SUBJECT':
             subject = content
-        elif tag == 'READ':
+        elif tag == 'READ' or tag == 'TMPREAD':
             is_read = True
         elif tag == 'DATE':
             date = date_from_content(content)
@@ -152,21 +152,13 @@ def update_email(file, new_line):
 def update_email_id(file, id_):
     update_email(file, f'__ID__ {id_}')
 
-def update_email_read(file, bool):
-    if bool:
-        update_email(file, '__READ__')
-    else:
-        with open(file, 'r') as f:
-            all = f.readlines()
-        with open(file, 'w') as f:
-            for l in all:
-                tag, _ = extract_tag(l)
-                if tag != 'READ':
-                    f.write(l)
+def update_email_read(file):
+    update_email(file, '__TMPREAD__')
+   
 
 def read_email(email):
     if not email.is_read:
-        update_email_read(email.file, True)
+        update_email_read(email.file)
 
     cprint(f'\nMessage de : {email.source}', color='blue', on_color='on_yellow')
     cprint(f'Sujet : {email.subject}\n', color='blue', on_color='on_yellow')
@@ -195,7 +187,7 @@ def clean_emails(): # only at start
         with open(file, 'w') as f:
             for l in all:
                 tag, _ = extract_tag(l)
-                if tag != 'ID':
+                if tag != 'ID' and tag != 'TMPREAD':
                     f.write(l)
 
 def date_from_file(file):

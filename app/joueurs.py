@@ -12,6 +12,11 @@ init()
 
 clean_emails()
 
+# explosion avec code et timer
+# entrée de choix pour la redistribution
+# lire des voix à distance
+
+
 if __name__ == "__main__":
 
     while True:
