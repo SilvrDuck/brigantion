@@ -20,9 +20,9 @@ def extract_tag(s, regex=find_tag):
 
 # Docs
 
-Document = namedtuple('Document', 'title pwd hidden text') # str str bool str
+Document = namedtuple('Document', 'title pwd hidden text file') # str str bool str
 
-def create_doc(doc):
+def create_doc(doc, file):
     title = None
     pwd = None
     hidden = False
@@ -44,7 +44,8 @@ def create_doc(doc):
             title=title,
             pwd=pwd,
             hidden=hidden,
-            text=''.join(text)
+            text=''.join(text),
+            file=file,
         )
 
 def read_doc(doc):
@@ -68,12 +69,14 @@ def read_doc(doc):
     
     print(doc.text)
 
-all_documents = {}
-for f in config.documents_path.iterdir():
-    with open(f, "r") as d:
-        doc = create_doc(d)
-        if doc is not None:
-            all_documents[doc.title.lower()] = doc
+def all_documents():
+    all_documents = {}
+    for f in config.documents_path.iterdir():
+        with open(f, "r", encoding='latin-1') as d:
+            doc = create_doc(d, f)
+            if doc is not None:
+                all_documents[doc.title.lower()] = doc
+    return all_documents
 
 ## Emails
 
@@ -136,16 +139,16 @@ def create_email(email, file):
 def get_emails():
     ret = {}
     for f in config.emails_path.iterdir():
-        with open(f, 'r') as e:
+        with open(f, 'r', encoding='latin-1') as e:
             email = create_email(e, f)
             if email is not None:
                 ret[email.id_] = email
     return ret
 
 def update_email(file, new_line):
-    with open(file, 'r') as f:
+    with open(file, 'r', encoding='latin-1') as f:
         all = f.readlines()
-    with open(file, 'w') as f:
+    with open(file, 'w', encoding='latin-1') as f:
         f.write(f'{new_line}\n')
         [f.write(l) for l in all]
 
@@ -182,9 +185,9 @@ def date_from_content(content):
 
 def clean_emails(): # only at start
     for file in config.emails_path.iterdir():
-        with open(file, 'r') as f:
+        with open(file, 'r', encoding='latin-1') as f:
             all = f.readlines()
-        with open(file, 'w') as f:
+        with open(file, 'w', encoding='latin-1') as f:
             for l in all:
                 tag, _ = extract_tag(l)
                 if tag != 'ID' and tag != 'TMPREAD':

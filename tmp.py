@@ -16,7 +16,7 @@ for i in range(8):
 
 
 
-with open('test.txt', 'r') as f:
+with open('test.txt', 'r', encoding='latin-1') as f:
         line_cnt = 1
         for l in f:
                 sublen = len(l) // columns + 1

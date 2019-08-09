@@ -6,19 +6,28 @@ from app.documents import (
     all_documents,
     print_t,
 )
-
+from datetime import datetime, timedelta
+from random import randint
+from app import config
 from app.utils import cprint
-
+import requests
+from prompt_toolkit import prompt
 
 def exec_cmd(cmd, args):       
     cmd_switch.get(cmd, default)(args)
 
 
 def default(args):
-    cprint(f"Commande inconnue.", color='red')
-    print(f'Commandes disponibles :')
-    for cmd in sorted(cmd_switch.keys()):
-        print(f'    {cmd}')
+    reseted = False
+    if len(args) > 0:
+        if args[0] == '8': # if pass was started
+            reseted = reset_timer(args)
+
+    if not reseted:
+        cprint(f"Commande inconnue.", color='red')
+        print(f'Commandes disponibles :')
+        for cmd in sorted(cmd_switch.keys()):
+            print(f'    {cmd}')
 
 
 def lire(args):
@@ -39,7 +48,7 @@ def lire(args):
             print('Pas de message {}.'.format(key))
 
     else: # document
-        doc = all_documents.get(key.lower(), None)
+        doc = all_documents().get(key.lower(), None)
         if doc is not None:
             read_doc(doc)
         else:
@@ -47,11 +56,46 @@ def lire(args):
 
 
 def documents(args):
-    [print(d.title) for d in all_documents.values() if not d.hidden]
+    cprint('Liste des documents disponibles', on_color='on_yellow', color='blue')
+    [print(d.title) for d in all_documents().values() if not d.hidden]
 
+def timer(args):
+    json = requests.get(f'{config.ip_pj}/time_to_explosion').json()
+    cprint(f"{json['min']} minutes et {json['sec']} restantes avant explosion.", color='red')
     
-def sismographe(args):
-    pass
+def reset_timer(args):
+    if ' '.join(args) == '8 15 16 23 42':
+        json = requests.get(f'{config.ip_pj}/time_to_explosion').json()
+        delay = config.reset_delay
+        if json['min'] < delay:
+            resp = requests.get(f'{config.ip_pj}/reset_timer').json()
+            cprint(f"Timer relancé, explosion dans {resp['min']} minutes et {resp['sec']} seconds.", color='green')
+            return True
+        else:
+            cprint(f'Impossible de relancer le timer plus de {delay} minutes avant l’explosion.', color='red')
+            cprint(f"Explosion dans {json['min']} minutes et {json['sec']} seconds.", color='red')
+            return True
+
+    return False
+
+
+def envoyer(args):
+    dest = prompt(message='destinataire : ')
+    subject = prompt(message='sujet : ')
+    text = prompt(
+        message='Texte (Appuyiez sur Esc puis Enter pour envoyer) : ',
+        multiline=True,
+    )
+
+    requests.post(
+        f'{config.ip_pj}/email_to_pnj',
+        json={
+            'subject': subject,
+            'dest': dest,
+            'text': text,
+        },
+    )
+    cprint('Message envoyé !', color='green')    
 
 def messages(args):
     emails = get_emails()
@@ -92,6 +136,7 @@ def messages(args):
 cmd_switch = {
     'lire': lire,
     'documents': documents,
-    'sismographe': sismographe,
     'messages': messages,
+    'timer': timer,
+    'envoyer': envoyer,
 } 

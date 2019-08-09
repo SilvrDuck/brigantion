@@ -21,7 +21,7 @@ def message():
     if len(emails) > 0:
         ret.extend([
             ("class:emails", f"{len(emails)} messages non lus "),
-            ("class:colon", ": "),
+            ("class:colon", "| "),
         ])
 
     ret.extend([
